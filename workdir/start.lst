@@ -1,0 +1,9 @@
+
+@a2600-tutorial-03\files.lst
+
+
+#-link
+
+#!Stella sillytalking.bin
+#!Stella test-farjmp.bin
+#!pause

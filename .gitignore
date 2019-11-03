@@ -1,0 +1,11 @@
+*.suo
+/Debug
+/obj/base
+*.ipch
+/doc/wiki-eval-funcs.txt
+/k65.VC.db
+/obj/gen
+/workdir/a2600-tutorial-03.bin
+/workdir/a2600-tutorial-03.gmap
+/workdir/a2600-tutorial-03.lst
+/workdir/a2600-tutorial-03.sym

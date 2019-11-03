@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{146225cd-9bbf-4d6b-a95e-b424160a9876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated">
+      <UniqueIdentifier>{754816cf-0f22-419b-a6c7-af1b60ddda62}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\optab.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\evalparser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\asm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\eval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\comstate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sqlinker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\base\base.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\base\convert2.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\base\vfs.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\base\streams.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\base\vmath.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sqbind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\squirrel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler_src.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\asm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler_eval.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sqbind.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\squirrel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sqapi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\comstate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sqlinker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\convert_parse.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\strings.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\vfs.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\streams.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gen\compiler.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="src\compiler.inc">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\gen_eval_ops.awk">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\compiler_evany.h">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Makefile" />
+    <None Include="src\gen\compiler_evops.inl">
+      <Filter>Generated</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,109 @@
+
+var zeropage = 0;
+
+
+// Type        NTSC  PAL/SECAM
+// V-Sync      3     3    scanlines
+// V-Blank     37    45   scanlines (upper border)
+// Picture     192   228  scanlines
+// Overscan    30    36   scanlines (lower border)
+// Frame Rate  60    50   Hz
+// Frame Time  262   312  scanlines
+
+// --- scanline numbers ---
+// Type        NTSC		PAL/SECAM
+// V-Sync      3		3    
+// V-Blank     37		45   
+// Picture     192		228  
+// Overscan    30		36
+
+
+
+
+
+inline init		{ i+ d-		s=x=0xFF	a=0 { zeropage,x=a x-- }!=	}
+inline timwait	{ { a=INTIM }!= }
+inline wsync	{ WSYNC=a }
+
+// PAL:		0	45	275		312
+// NTSC:	0	37	231		262
+
+// PAL
+inline sync1	{ timwait wsync VBLANK=a=2 TIM64T=a=40 }
+inline sync2	{ timwait wsync VSYNC=a=2 wsync wsync a=0 wsync VSYNC=a TIM64T=a=54 }
+inline sync3	{ timwait wsync VBLANK=a=0 T1024T=a=18 }
+
+// NTSC
+//inline sync1	{ timwait wsync VBLANK=a=2 TIM64T=a=33 }
+//inline sync2	{ timwait wsync VSYNC=a=2 wsync wsync a=0 wsync VSYNC=a TIM64T=a=44 }
+//inline sync3	{ timwait wsync VBLANK=a=0 TIM64T=a=231 }
+
+
+
+
+var ns0=0x04,ns1;				// 00xx 0xxx   Number-Size player/missle 0/1
+								//		 ^^^	- Player-Missile number & Player size (See table below)
+								//		 000		  0  One copy              (X.........)
+								//		 001		  1  Two copies - close    (X.X.......)
+								//		 010		  2  Two copies - medium   (X...X.....)
+								//		 011		  3  Three copies - close  (X.X.X.....)
+								//		 100		  4  Two copies - wide     (X.......X.)
+								//		 101		  5  Double sized player   (XX........)
+								//		 110		  6  Three copies - medium (X...X...X.)
+								//		 111		  7  Quad sized player     (XXXX......)
+								//	 ^^			- Missile Size  (0..3 = 1,2,4,8 pixels width)
+
+var cp0=0x06,cp1,cpf,cbg;		// xxxx xxx-   Color-Luminance Player 0/1, Playfield, Background
+var ctpf=0x0A;					// --xx -xxx   Control Playfield, Ball, Collisions
+								//		   ^	- Playfield Reflection     (0=Normal, 1=Mirror right half)
+								//		  ^		- Playfield Color          (0=Normal, 1=Score Mode, only if Bit2=0)
+								//		 ^		- Playfield/Ball Priority  (0=Normal, 1=Above Players/Missiles)
+								//	 ^^			- Ball size                (0..3 = 1,2,4,8 pixels width)
+
+var rep0=0x0B, rep1;			// ---- x---   Reflection Player 0/1
+var pf0=0x0D, pf1, pf2;			// xxxx ----   Playfield Register Byte 0
+								// xxxx xxxx   Playfield Register Byte 1
+								// xxxx xxxx   Playfield Register Byte 2
+var rp0=0x10,rp1,rm0,rm1,rb;	// ---- ----   Reset Player 0/1, Missile 0/1, Ball
+
+var gp0=0x1B,gp1;				// xxxx xxxx   Graphics Register Player 0/1
+var em0=0x1D,em1,eb;			// ---- --x-   Graphics Enable Missle 0/1, Ball
+var hp0=0x20,hp1,hm0,hm1,hb;	// xxxx ----   Horizontal Motion Player 0/1, Missile 0/1, Ball
+var vdp0=0x25,vdp1,vdb;			// ---- ---x   Vertical Delay Player 0/1, Ball
+var rmp0=0x28,rmp1;				// ---- --x-   Reset Missle 0/1 to Player 0/1
+var hmove=0x2A;					// ---- ----   Apply Horizontal Motion
+var hmclr=0x2B;					// ---- ----   Clear Horizontal Move Registers
+
+var gp0h=0x11B,gp1h;			// xxxx xxxx   Graphics Register Player 0/1
+var rmp0h=0x128,rmp1h;			// ---- --x-   Reset Missle 0/1 to Player 0/1
+var pf0h=0x10D, pf1h, pf2h;		// xxxx ----   Playfield Register Byte 0
+var cp0h=0x106,cp1h,cpfh,cbgh;	// xxxx xxx-   Color-Luminance Player 0/1, Playfield, Background
+var hp0h=0x120,hp1h,hm0h,hm1h,hbh;	// xxxx ----   Horizontal Motion Player 0/1, Missile 0/1, Ball
+
+var ac0=0x15,ac1;				// ---- xxxx   Audio Control 0/1
+var af0=0x17,af1;				// ---x xxxx   Audio Frequency 0/1
+var av0=0x19,av1;				// ---- xxxx   Audio Volume 0/1
+
+var inpt0=0x38;					// x--- ----   read pot port
+var inpt1=0x39;					// x--- ----   read pot port
+var inpt2=0x3A;					// x--- ----   read pot port
+var inpt3=0x3B;					// x--- ----   read pot port
+var inpt4=0x3C;					// x--- ----   read input / P0 Fire (0 active)
+var inpt5=0x3D;					// x--- ----   read input / P1 Fire (0 active)
+  
+var swcha=0x280;				// xxxx xxxx   Port A
+								//         ^	- P1 Up		(0 active)
+								//        ^		- P1 Down	(0 active)
+								//       ^		- P1 Left	(0 active)
+								//      ^		- P1 Right	(0 active)
+								//    ^			- P0 Up		(0 active)
+								//   ^			- P0 Down	(0 active)
+								//  ^			- P0 Left	(0 active)
+								// ^			- P0 Right	(0 active)
+
+var swchb=0x282;				// xx-- x-xx   Port B
+								//         ^	- Reset Button          (0=Pressed)
+								//		  ^		- Select Button         (0=Pressed)
+								//      ^		- Color Switch          (0=B/W, 1=Color) (Always 0 for SECAM)
+								//  ^			- P0 Difficulty Switch  (0=Beginner (B), 1=Advanced (A))
+								// ^			- P1 Difficulty Switch  (0=Beginner (B), 1=Advanced (A))

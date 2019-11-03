@@ -1,0 +1,87 @@
+/*
+*	Tutorial 03 - data... continued
+*
+*
+*/
+
+// RAM variables
+var anim=0x80, cntX, cntY;	// you can declare consecutive variables in single statement
+
+
+data sprite {
+	align 256
+	// image <file> <x0> <y0> <byte> <repeat> - gather bits from image
+	//	<file>		- file name without ".bmp" extension
+	//	<x0> <y0>	- first pixel to scan
+	//	<byte>		- scanning mode for each single byte starting with MSB (count+direction)
+	//	<repeat>	- scanning mode for consecutive bytes (count+direction)
+
+	image sprites  0 0 8> 16v		// start at pixel (0,0), each byte is 8 bits to the right, repeat 16 times going up
+	image sprites 10 0 8> 16v		// do the same from (10,0)
+	image sprites 20 0 8> 16v		// and again starting at (20,0)
+}
+
+data SineX {
+	align 256
+	0
+	for x=0..213 eval [ (sin(x/212*pi*2)*.499+.499)*130 ]
+}
+
+data SineY {
+	align 256
+	0
+	for x=0..255 eval [ (sin(x/256*pi*2)*.499+.499)*180+1 ]
+}
+
+// entry point block is declared with "main"
+main {
+	init
+	cntX=a=1
+
+	{
+		sync1
+		sync2
+		sync3
+
+		// compute sprite frame and data start
+		a=anim a<< a&0x30	// LDA+ASL+AND - you can write everything in single line, too
+		a?0x30				// CMP
+		=={ a=0x10 }		// if zero/equal (uses BNE)
+		y=a
+
+		// position sprite in X axis
+		x=cntX
+		a=SineX,x
+		nocross {	// make sure following code doesn't cross page boundary
+			wsync { a-15 }>=0 a<< a<< a<< a<< a^0x70 hp0=a *5 rp0=a		// sprite position trick
+		}
+		wsync hmove=a
+
+		// ...and in Y axis
+		x=cntY
+		a=SineY,x
+		x=a
+		{ wsync x-- }!=		// one-liners rulez ;)
+
+
+		// draw sprite
+		x=16
+		cp0=a=0x0F
+		ns0=a=5		// double size
+		{
+			wsync
+			gp0=a=sprite,y
+			wsync
+			y++
+			x--
+		}!=
+		wsync
+		gp0=a=0
+
+		// animate
+		anim++
+		cntX-- =={ cntX=a=213 }
+		cntY--
+
+	} always	// loop forever
+}
