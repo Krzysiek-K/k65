@@ -49,7 +49,7 @@ _HEADERS+= gen/compiler_evops.inl
 
 
 COMPILER = bin/compiler.exe
-GAWK = bin/gawk.exe
+GAWK := $(which gawk)
 
 
 
