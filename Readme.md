@@ -3,8 +3,11 @@
 ## Compilation command for Windows, Linux, Macos
 
 Just use "make" in k65 directory
+
 For instance:
+
 `cd k65 && make`
+
 For test use: `make test` and output should end by "All OK".
 
 ## Usage
