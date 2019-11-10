@@ -47,10 +47,15 @@ _HEADERS+= gen/compiler_evops.inl
 
 # ------------------------------------------------ Configuration ------------------------------------------------
 
-
 COMPILER = bin/compiler.exe
-GAWK = bin/gawk.exe
 
+ifeq ($(SYSTEM),linux)
+	GAWK := $(which gawk)
+else ifeq ($(SYSTEM),macos)
+	GAWK := $(which gawk)
+else
+	GAWK = bin/gawk
+endif
 
 
 # ------------------------------------------------ Misc settings ------------------------------------------------
