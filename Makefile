@@ -49,12 +49,10 @@ _HEADERS+= gen/compiler_evops.inl
 
 COMPILER = bin/compiler.exe
 
-ifeq ($(SYSTEM),linux)
-	GAWK := $(which gawk)
-else ifeq ($(SYSTEM),macos)
-	GAWK := $(which gawk)
-else
+ifeq ($(OS),Windows_NT)
 	GAWK = bin/gawk
+else 
+	GAWK := $(shell which gawk)
 endif
 
 
