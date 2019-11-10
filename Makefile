@@ -69,7 +69,9 @@ all: init out/k65.exe
 
 clean:
 	rm -f out/k65.exe
-	rm -f obj/*.*
+	rm -f obj/*.o
+	rm -f obj/base/*.o
+	rm -f obj/gen/*.o
 	rm -f src/gen/*.*
 
 rebuild: clean all

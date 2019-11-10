@@ -11,3 +11,5 @@
 /workdir/a2600-tutorial-03.sym
 *.opendb
 /src/gen
+*.o
+/out/*.exe
