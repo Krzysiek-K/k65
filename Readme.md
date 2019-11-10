@@ -1,14 +1,5 @@
 # K65 - a custom assembler for 6502-based CPUssage
 
-## Compilation for different operating systems
+## Compilation command for Windows, Linux, Macos
 
-### Linux
-
-`make -p SYSTEM=linux`
-
-### Macos
-
-`make -p SYSTEM=linux`
-
-### Windows
 `make`
