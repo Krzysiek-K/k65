@@ -41,7 +41,8 @@ void sprintf(string &out,const char *fmt, ...)
 
 void vsprintf(string &out,const char *fmt, va_list arg)
 {
-	va_list start = arg;
+	va_list start;
+	va_copy(start, arg);
 	int len = vsnprintf(NULL,0,fmt,arg) + 1;
 	out.resize(len);
 	vsnprintf((char*)out.data(),len,fmt,start);
