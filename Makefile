@@ -47,7 +47,12 @@ _HEADERS+= gen/compiler_evops.inl
 
 # ------------------------------------------------ Configuration ------------------------------------------------
 
-COMPILER = bin/compiler.exe
+ifeq ($(OS),Windows_NT)
+	COMPILER = bin/compiler.exe
+else 
+	COMPILER = bin/compiler
+endif
+
 
 ifeq ($(OS),Windows_NT)
 	GAWK = bin/gawk
