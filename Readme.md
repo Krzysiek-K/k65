@@ -13,3 +13,10 @@ For test use: `make test` and output should end by "All OK".
 ## Usage
 
 [K65 documentation](http://devkk.net/wiki/index.php/K65)
+
+### Authors:
+
+#### Code: KK
+
+#### DevOps: Traq
+
