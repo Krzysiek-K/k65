@@ -1,0 +1,98 @@
+$$ CODE_PRELEXER
+
+	vector<int> state_stack;
+	vector<symb_t> symbol_stack;
+	int next_type = -1;
+	symb_t next_symb;
+	string ready_chars;
+	state_stack.push_back(0);
+	int curpos_line = 1;
+	int curpos_col = 1;
+.
+	while(1)
+	{
+		int LINE = curpos_line;
+		int COLUMN = curpos_col;
+.
+		while(next_type<0)
+		{
+			int ls = 0, lpos=0;
+			int best_match=-1, best_len=0;
+			while(1)
+			{
+				int cc = 0;
+				if(lpos>=(int)ready_chars.size())
+				{
+					cc = GetChar();
+					ready_chars.push_back(cc);
+.
+					curpos_col++;
+					if(cc=='\n') curpos_line++, curpos_col=1;
+				}
+				else
+					cc = ready_chars[lpos];
+				lpos++;
+				ls = LEXER[(cc<0 || cc>=128) ? 127 : cc][ls];
+				if(ls<0) break;
+				if(MATCH[ls]>=0) best_match=MATCH[ls], best_len=ready_chars.size();
+				if(cc==0) break;
+			}
+			string st(ready_chars.begin(),ready_chars.begin()+best_len);
+			ready_chars.erase(ready_chars.begin(),ready_chars.begin()+best_len);
+			if(best_len<=0) best_match=-1;
+			switch(best_match)
+			{
+#define COMMENT	next_type = -1; st.clear();
+
+
+$$ CODE_LEXER
+			case   -1: Error("lexical error"); return symb_t();
+			case    0: { next_type = 26;  next_symb=atoi(st.c_str())&0xFF; } break;
+			case    1: { next_type = 26;  next_symb=st.c_str()[1]; } break;
+			case    2: { next_type = 0;  next_symb=bf_ident(st.c_str()); } break;
+			case    3: { next_type = 28;  COMMENT } break;
+			case    4: { next_type = 28;  COMMENT } break;
+			case    5: { next_type = 28;  COMMENT } break;
+			default  : { next_type = MATCH[ls]-7;  printf("!"); } break;
+
+
+$$ CODE_POSTLEXER
+#undef COMMENT
+			}
+		}
+
+
+$$ CODE_PREPARSER
+		int ss = ACTION[state_stack.back()][next_type];
+		if(!ss) { Error("syntax error"); printf("%%s\n",SYMB[next_type]); return symb_t(); }
+		if(ss>0)
+		{
+			state_stack.push_back(ss-1);
+			symbol_stack.push_back(next_symb);
+			next_type = -1;
+		}
+		else
+		{
+			int nr = -1, nst;
+			symb_t ns;
+#define S0		ns
+#define S(n)	symbol_stack[symbol_stack.size()-(nr-(n)+1)]
+#define SN		nr
+			switch(~ss)
+			{
+
+
+$$ CODE_POSTPARSER
+			default: Error("internal error"); return symb_t();
+			}
+#undef S
+.
+			state_stack.erase(state_stack.end()-nr,state_stack.end());
+			symbol_stack.erase(symbol_stack.end()-nr,symbol_stack.end());
+			symbol_stack.push_back(ns);
+			if((~ss)==0) return symbol_stack.back();
+			ss = GOTO[state_stack.back()][nst];
+			if(ss<0) { Error("internal error"); return symb_t(); }
+			state_stack.push_back(ss);
+		}
+	}
