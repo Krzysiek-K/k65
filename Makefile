@@ -47,12 +47,7 @@ _HEADERS+= gen/compiler_evops.inl
 
 # ------------------------------------------------ Configuration ------------------------------------------------
 
-ifeq ($(OS),Windows_NT)
-	COMPILER = bin/compiler.exe
-else 
-	COMPILER = bin/compiler
-endif
-
+COMPILER = bin/compiler.exe
 
 ifeq ($(OS),Windows_NT)
 	GAWK = bin/gawk
@@ -60,6 +55,9 @@ else
 	GAWK := $(shell which gawk)
 endif
 
+ifndef GAWK
+    $(error gawk is not present. Please install gawk)
+endif
 
 # ------------------------------------------------ Misc settings ------------------------------------------------
 
@@ -67,13 +65,13 @@ endif
 OBJECTS = $(patsubst %,obj/%,$(_OBJECTS))
 HEADERS = $(patsubst %,src/%,$(_HEADERS))
 
-
+COMPILERPATH=compiler-standalone
 CXXFLAGS+= -Isrc
 
 
 # ------------------------------------------------ Top-level targets ------------------------------------------------
 
-all: init out/k65.exe
+all: init out/compiler.exe test/test.exe out/k65.exe 
 
 clean:
 	rm -f out/k65.exe
@@ -81,6 +79,11 @@ clean:
 	rm -f obj/base/*.o
 	rm -f obj/gen/*.o
 	rm -f src/gen/*.*
+	rm -f bin/compiler.exe
+	rm -f $(COMPILERPATH)/out/compiler.exe test/test.exe
+	rm -f $(COMPILERPATH)/src/lexer.inl
+	rm -f $(COMPILERPATH)/test/grammar.cpp
+
 
 rebuild: clean all
 
@@ -92,12 +95,30 @@ init:
 	mkdir -p obj/gen
 	mkdir -p src/gen
 
+
+
 test: a2600-tutorial-03.bin
 
 
-
 # ------------------------------------------------ Build rules ------------------------------------------------
+src/lexer.inl: $(COMPILERPATH)/src/lexer.template $(COMPILERPATH)/src/_txt2cpp.awk
+	gawk -f $(COMPILERPATH)/src/_txt2cpp.awk OUTFILE=$(COMPILERPATH)/src/lexer.inl $(COMPILERPATH)/src/lexer.template
 
+out/compiler.exe: $(COMPILERPATH)/src/common.h src/lexer.inl $(COMPILERPATH)/src/lexer.cpp $(COMPILERPATH)/src/parser.cpp $(COMPILERPATH)/src/main.cpp
+	mkdir -p $(COMPILERPATH)/out
+	g++ $(COMPILERPATH)/src/lexer.cpp $(COMPILERPATH)/src/parser.cpp $(COMPILERPATH)/src/main.cpp -o $(COMPILERPATH)/out/compiler.exe
+
+test/grammar.cpp: $(COMPILERPATH)/test/grammar.h $(COMPILERPATH)/out/compiler.exe
+	./$(COMPILERPATH)/out/compiler.exe $(COMPILERPATH)/test/grammar.h $(COMPILERPATH)/test/grammar.cpp
+
+
+test/test.exe: test/grammar.cpp
+	g++ $(COMPILERPATH)/test/grammar.cpp -o $(COMPILERPATH)/test/test.exe
+	cp $(COMPILERPATH)/out/compiler.exe bin/
+
+ifneq ($(OS),Windows_NT)
+	chmod +x bin/compiler.exe
+endif
 
 out/k65.exe : $(OBJECTS)
 	g++ -o $@ $(OBJECTS)

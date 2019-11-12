@@ -1,0 +1,14 @@
+/Release
+/Debug
+/test/Release
+/test/Debug
+/out
+*.suo
+*.opendb
+*.db
+*.user
+*.tlog
+/src/lexer.inl
+/test/grammar.cpp
+/test/test.exe
+*.bak

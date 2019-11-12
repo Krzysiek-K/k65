@@ -1,0 +1,16 @@
+
+// Print numbers 20 .. 00
+
+byte a = '2', b = '0';
+while(a>='0')
+{
+	while(b>='0')
+	{
+		out(a);
+		out(b);
+		out(10);		// newline
+		b = b - 1;
+	}
+	a = a - 1;
+	b = '9';
+}
