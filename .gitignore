@@ -13,3 +13,4 @@
 /src/gen
 *.o
 /out/*.exe
+bin/compiler.exe

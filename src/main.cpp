@@ -301,7 +301,7 @@ int main(int argc, char * argv[])
 {
 	// print version info
 	printf("K65 compiler, version " K65_VERSION_TEXT() ", build " __DATE__ " " __TIME__ ".\n");
-	printf("Copyright (C) 2012-2015 Krzysztof Kluczek ( devkk.net ).\n");
+	printf("Copyright (C) 2012-2020 Krzysztof Kluczek ( devkk.net ).\n");
 	printf("This is free software; see the source for copying conditions.  There is NO\n");
 	printf("warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n");
 	printf("\n");
