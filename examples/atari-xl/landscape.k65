@@ -1,7 +1,7 @@
-;------------------------------------------------------------------------------
-; This is a part of Quatari 256B intro
-; https://demozoo.org/productions/280623
-;------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// This is a part of Quatari 256B intro
+// https://demozoo.org/productions/280623
+//------------------------------------------------------------------------------
 
 var CURSOR_Y = 0x54
 var CURSOR_X = 0x55
@@ -30,8 +30,8 @@ main {
     {
       x=COLOR
       CURSOR_Y=a=colorHeight,x
-      a=1 a&RND != { colorHeight,x++ }
-      a=1 a&RND != { colorHeight,x-- }
+      a=RND <0 { colorHeight,x++ }
+      a=RND <0 { colorHeight,x-- }
       call drawto
       COLOR--
     } >=0
