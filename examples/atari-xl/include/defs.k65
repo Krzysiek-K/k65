@@ -1,0 +1,213 @@
+
+
+// ================================ GTIA ================================
+
+
+// GTIA - Write
+
+var HPOSP0		= 0xD000;		// xxxx xxxx	Horizontal Position of Player 0
+var HPOSP1		= 0xD001;		// xxxx xxxx	Horizontal Position of Player 1
+var HPOSP2		= 0xD002;		// xxxx xxxx	Horizontal Position of Player 2
+var HPOSP3		= 0xD003;		// xxxx xxxx	Horizontal Position of Player 3
+var HPOSM0		= 0xD004;		// xxxx xxxx	Horizontal Position of Missile 0
+var HPOSM1		= 0xD005;		// xxxx xxxx	Horizontal Position of Missile 1
+var HPOSM2		= 0xD006;		// xxxx xxxx	Horizontal Position of Missile 2
+var HPOSM3		= 0xD007;		// xxxx xxxx	Horizontal Position of Missile 3
+var SIZEP0		= 0xD008;		// ---- --ss	Size of Player 0 (x0-Normal, 01-Double, 11-Quad)
+var SIZEP1		= 0xD009;		// ---- --ss	Size of Player 1
+var SIZEP2		= 0xD00A;		// ---- --ss	Size of Player 2
+var SIZEP3		= 0xD00B;		// ---- --ss	Size of Player 3
+var SIZEM		= 0xD00C;		// 3322 1100	Size of all Missiles
+var GRAFP0		= 0xD00D;		// xxxx xxxx	Graphics pattern for Player 0
+var GRAFP1		= 0xD00E;		// xxxx xxxx	Graphics pattern for Player 1
+var GRAFP2		= 0xD00F;		// xxxx xxxx	Graphics pattern for Player 2
+var GRAFP3		= 0xD010;		// xxxx xxxx	Graphics pattern for Player 3
+var GRAFM		= 0xD011;		// xxxx xxxx	Graphics pattern for all Missiles
+var COLPM0		= 0xD012;		// cccc llll	Color/luminance of Player and Missile 0.
+var COLPM1		= 0xD013;		// cccc llll	Color/luminance of Player and Missile 1.
+var COLPM2		= 0xD014;		// cccc llll	Color/luminance of Player and Missile 2.
+var COLPM3		= 0xD015;		// cccc llll	Color/luminance of Player and Missile 3.
+var COLPF0		= 0xD016;		// cccc llll	Color/luminance of Playfield 0.
+var COLPF1		= 0xD017;		// cccc llll	Color/luminance of Playfield 1.
+var COLPF2		= 0xD018;		// cccc llll	Color/luminance of Playfield 2.
+var COLPF3		= 0xD019;		// cccc llll	Color/luminance of Playfield 3.
+var COLBK		= 0xD01A;		// cccc llll	Color/luminance of Playfield background.
+
+var PRIOR		= 0xD01B;		// ggmf pppp	Priority selection, fifth player, and GTIA modes
+								//		^^^^	 - Priority bits
+								//	  ^			 - Fifth player
+								//	 ^			 - Multi-color player
+								// ^^			 - GTIA color interpretation
+
+var VDELAY		= 0xD01C;		// 3210 3210	Vertical Delay P/M Graphics
+								//		^^^^	 - Missiles
+								// ^^^^			 - Players
+
+var GRACTL		= 0xD01D;		// ---- -tpm	Graphics Control.
+								//		   ^	 - Enable missiles
+								//		  ^		 - Enable Players
+								//		 ^		 - Trigger latch
+
+var HITCLR		= 0xD01E;		// ---- ----	Clear Collisions
+var CONSPK		= 0xD01F;		// 000s ----	Console Speaker
+
+
+
+
+// GTIA - Read
+
+
+var M0PF		= 0xD000;		// ---- 3210	Missile 0 to Playfield collisions
+var M1PF		= 0xD001;		// ---- 3210	Missile 1 to Playfield collisions
+var M2PF		= 0xD002;		// ---- 3210	Missile 2 to Playfield collisions
+var M3PF		= 0xD003;		// ---- 3210	Missile 3 to Playfield collisions
+var P0PF		= 0xD004;		// ---- 3210	Player 0 to Playfield collisions
+var P1PF		= 0xD005;		// ---- 3210	Player 1 to Playfield collisions
+var P2PF		= 0xD006;		// ---- 3210	Player 2 to Playfield collisions
+var P3PF		= 0xD007;		// ---- 3210	Player 3 to Playfield collisions
+var M0PL		= 0xD008;		// ---- 3210	Missile 0 to Player collisions
+var M1PL		= 0xD009;		// ---- 3210	Missile 1 to Player collisions
+var M2PL		= 0xD00A;		// ---- 3210	Missile 2 to Player collisions
+var M3PL		= 0xD00B;		// ---- 3210	Missile 3 to Player collisions
+var P0PL		= 0xD00C;		// ---- 321x	Player 0 to Player collisions
+var P1PL		= 0xD00D;		// ---- 32x0	Player 1 to Player collisions
+var P2PL		= 0xD00E;		// ---- 3x10	Player 2 to Player collisions
+var P3PL		= 0xD00F;		// ---- x210	Player 3 to Player collisions
+var TRIG0		= 0xD010;		// 0000 000x	Joystick 0 trigger.
+var TRIG1		= 0xD011;		// 0000 000x	Joystick 1 trigger.
+var TRIG2		= 0xD012;		// 0000 000x	Joystick 2 trigger.
+var TRIG3		= 0xD013;		// 0000 000x	Joystick 3 trigger.
+var PAL			= 0xD014;		// ---- vvvv	PAL flags (1111-NTSC, 0000-PAL)
+var CONSOL		= 0xD01F;		// ---- -osr	Console Keys
+								//		   ^	 - Start
+								//		  ^		 - Select
+								//		 ^		 - Option
+
+
+
+// ================================ ANTIC ================================
+
+
+// Write
+var DMACTL	= 0xD400;			// --dr pmww	Direct Memory Access Control
+								//		  ^^	 - Playfield width (0-disable, 1-narrow, 2-normal, 3-wide)
+								//		 ^		 - Enable missile DMA
+								//		^		 - Enable player DMA
+								//	  ^			 - Player/missile single line resolution
+								//	 ^			 - Display list DMA
+
+var CHACTL	= 0xD401;			// ---- -rib	Character Control
+								//		   ^	 - Display characters $80-$FF as blank		(modes 2, 3)
+								//		  ^		 - Display characters $80-$FF as inverse	(modes 2, 3)
+								//		 ^		 - Vertically mirror text
+
+var DLISTL	= 0xD402;			// xxxx xxxx	Display List Pointer (low byte)
+var DLISTH	= 0xD403;			// xxxx xxxx	Display List Pointer (high byte)
+var HSCROL	= 0xD404;			// ---- xxxx	Horizontal Fine Scroll
+var VSCROL	= 0xD405;			// ---- xxxx	Vertical Fine Scroll
+var PMBASE	= 0xD407;			// xxxx x?00	Player/Missile Base Address	(align 1k double line, align 2k single line)
+var CHBASE	= 0xD409;			// xxxx xx?0	Character Set Base Address	(align 1k for 2,3,4,5; align 512 for 6,7)
+var WSYNC	= 0xD40A;			// ---- ----	Wait for Horizontal Sync
+
+// Read
+var VCOUNT	= 0xD40B;			// xxxx xxxx	Vertical Line Counter	(divided by 2; 0-130 for NTSC, 0-155 for PAL)
+var PENH	= 0xD40C;			// xxxx xxxx	Light Pen Horizontal Position
+var PENV	= 0xD40D;			// xxxx xxxx	Light Pen Vertical Position
+
+// NMI
+var NMIEN	= 0xD40E;			// dvr- ----	[write] Non-Maskable Interrupt (NMI) Enable
+								//	 ^			 - Enable Reset key interrupt
+								//	^			 - Enable vertical blank interrupt
+								// ^			 - Enable display list interrupt
+
+var NMIRES	= 0xD40F;			// ---- ----	[write] Non-Maskable Interrupt (NMI) Reset
+var NMIST	= 0xD40F;			// dvr- ----	[read] Non-Maskable Interrupt (NMI) Status
+
+
+
+
+// ================================ POKEY ================================
+
+
+// POKEY - Write
+
+var AUDF1	= 0xD200;			// xxxx xxxx	Audio Channel 1 Frequency
+var AUDC1	= 0xD201;			// nnnf vvvv	Audio Channel 1 Control
+								//		^^^^	 - Volume
+								//	  ^			 - Force volume (PCM)
+								// ^^^			 - Noise/distortion
+								// 000					0	5p -> 17p
+								// 001					1	5p
+								// 010					2	5p -> 4p
+								// 011					3	5p
+								// 100					4	17p
+								// 101					5	pure tone
+								// 110					6	4p
+								// 111					7	pure tone
+
+var AUDF2	= 0xD202;			// xxxx xxxx	Audio Channel 2 Frequency
+var AUDC2	= 0xD203;			// nnnf vvvv	Audio Channel 2 Control
+var AUDF3	= 0xD204;			// xxxx xxxx	Audio Channel 3 Frequency
+var AUDC3	= 0xD205;			// nnnf vvvv	Audio Channel 3 Control
+var AUDF4	= 0xD206;			// xxxx xxxx	Audio Channel 4 Frequency
+var AUDC4	= 0xD207;			// nnnf vvvv	Audio Channel 4 Control
+
+var AUDCTL	= 0xD208;			// 9ffa ahhdd	Audio Control
+								//		   ^	 - Frequency divider rate (0-64kHz, 1-15kHz)
+								//		  ^		 - Hi-pass filter for channel 2 driven by frequency of channel 4
+								//		 ^		 - Hi-pass filter for channel 1 driven by frequency of channel 3
+								//		^		 - Connect 4+3 for higher accuracy
+								//	  ^			 - Connect 2+1 for higher accuracy
+								//	 ^			 - Channel 3 frequency (0-1.77MHz PAL, 1-1.79MHz NTSC)
+								//	^			 - Channel 1 frequency (0-1.77MHz PAL, 1-1.79MHz NTSC)
+								// ^			 - Poly 17 vs poly 9 (0-17p, 1-9p)
+
+var STIMER	= 0xD209;			//	Start Timers
+var SKREST	= 0xD20A;			// ---- ----	Reset Serial Status (SKSTAT)
+var POTGO	= 0xD20B;			// ---- ----	Start POT Scan Sequence
+var SEROUT	= 0xD20D;			// xxxx xxxx	Serial Port Data Output
+var IRQEN	= 0xD20E;			//	Interrupt Request Enable
+var SKCTL	= 0xD20F;			//	Serial Port Control
+
+
+// POKEY - Read
+
+var POT0	= 0xD200;			// xxxx xxxx	Potentiometer (Paddle) 0
+var POT1	= 0xD201;			// xxxx xxxx	Potentiometer (Paddle) 1
+var POT2	= 0xD202;			// xxxx xxxx	Potentiometer (Paddle) 2
+var POT3	= 0xD203;			// xxxx xxxx	Potentiometer (Paddle) 3
+var POT4	= 0xD204;			// xxxx xxxx	Potentiometer (Paddle) 4
+var POT5	= 0xD205;			// xxxx xxxx	Potentiometer (Paddle) 5
+var POT6	= 0xD206;			// xxxx xxxx	Potentiometer (Paddle) 6
+var POT7	= 0xD207;			// xxxx xxxx	Potentiometer (Paddle) 7
+var ALLPOT	= 0xD208;			// xxxx xxxx	Read 8 Line POT Port State
+var KBCODE	= 0xD209;			// Keyboard Code
+var RANDOM	= 0xD20A;			// Random Number Generator
+var SERIN	= 0xD20D;			// Serial Port Data Input
+var IRQST	= 0xD20E;			// IRQ Status
+var SKSTAT	= 0xD20F;			// Serial Port Status
+
+
+
+
+// ================================ PIA/MMU ================================
+
+
+var PORTA	= 0xD300;
+var PORTB	= 0xD301;			// t-xx xxbo	MMU control
+								//		   ^	 - 1: Enable OS ROM				[$C000-$CFFF, $D800-$FFFF]
+								//		  ^		 - 0: Enable BASIC ROM			[$A000-$BFFF]
+								//	 ^^ ^^		 - bank switching (130XE only)
+								// ^			 - 0: Enable test ROM			[$5000-$57FF]
+
+var PACTL	= 0xD302;
+var PBCTL	= 0xD303;
+
+
+
+// ================================ Vectors ================================
+
+var NMIADL	= 0xFFFA;
+var NMIADH	= 0xFFFB;
+var IRQADL	= 0xFFFE;
+var IRQADH	= 0xFFFF;

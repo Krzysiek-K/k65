@@ -1,0 +1,42 @@
+;------------------------------------------------------------------------------
+; This is a part of Quatari 256B intro
+; https://demozoo.org/productions/280623
+;------------------------------------------------------------------------------
+
+var CURSOR_Y = 0x54
+var CURSOR_X = 0x55
+var PREV_Y   = 0x5A
+var PREV_X   = 0x5B
+
+var iter     = 0x80
+
+var COLOR4   = 0x02C8
+var COLOR    = 0x02FB
+var RND      = 0xD20A
+var openmode = 0xEF9C
+var drawto   = 0xF9C2
+
+data colorHeight {
+  170 150 144 144 122 122 110 110 94 94 86 86 82 80
+}
+
+main {
+  a=9 call openmode
+  COLOR4=a=0xB0
+
+  iter=a=79 {
+    CURSOR_X=a=iter PREV_X=a
+    PREV_Y=a=1 COLOR=a=13
+    {
+      x=COLOR
+      CURSOR_Y=a=colorHeight,x
+      a=1 a&RND != { colorHeight,x++ }
+      a=1 a&RND != { colorHeight,x-- }
+      call drawto
+      COLOR--
+    } >=0
+    iter--
+  } !=
+
+  {} always
+}
