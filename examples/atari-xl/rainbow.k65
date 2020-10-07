@@ -1,0 +1,6 @@
+main {
+  {
+    COLPF2=a=VCOUNT
+    WSYNC=a
+  } always
+}

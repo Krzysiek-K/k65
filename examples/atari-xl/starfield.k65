@@ -1,0 +1,24 @@
+var PCOLR0 = 0x02C0
+
+data stars {
+  align 256
+  for x=0..255 eval [ rnd() & 255 ]
+}
+
+data speed {
+  align 256
+  for x=0..255 eval [ (rnd() & 3) + 1 ]
+}
+
+main {
+  PCOLR0=a=14 GRAFM=a
+  {
+    a=0 { a?VCOUNT } !=
+    x=0 {
+      WSYNC=a
+      HPOSM0=a=stars,x
+      a=stars,x a+speed,x stars,x=a
+      x++
+    } !=
+  } always
+}
