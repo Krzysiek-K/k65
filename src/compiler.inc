@@ -295,7 +295,7 @@ BranchOp -> !=				% $0="BNE";
 BranchOp -> >=0				% $0="BPL";
 BranchOp -> >>=				% $0="BVC";
 BranchOp -> <<=				% $0="BVS";
-BranchOp -> Flag - ?		% $0=flag2jump($1,false);
+BranchOp -> Flag - ?		% $0=flag2jump($1,true);
 BranchOp -> Flag + ?		% $0=flag2jump($1,false);
 
 
