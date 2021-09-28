@@ -14,3 +14,4 @@
 *.o
 /out/*.exe
 bin/compiler.exe
+/Release

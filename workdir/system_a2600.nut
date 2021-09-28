@@ -108,6 +108,16 @@ function opt_superchip(cmd)
 OPTIONS.superchip <- opt_superchip
 SUPERCHIP <- 0
 
+
+// option: -keep
+keep_section_names  <- [];
+function opt_keep(cmd)
+{
+	keep_section_names.push(parse_string());
+}
+OPTIONS.keep <- opt_keep
+
+
 far_jump_stubs <- []
 
 
@@ -264,6 +274,17 @@ function link_make_sections()
 		sec_asm( as, "    BIT     __banksel_"+bto );		//	BIT		__banksel_to
 		sec_asm( as, "    JMP     "+j.target_label );		//	JMP		target
 		sec_init(as);
+	}
+
+
+	// -keep sections
+	foreach( name in keep_section_names )
+	{
+		local as = sec_find(name);
+		if( !as )
+			error("Missing section '"+name+"' specified as -keep paramater");
+		
+		sec_set_referenced(as, 1);
 	}
 }
 
