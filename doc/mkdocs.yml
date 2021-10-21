@@ -1,0 +1,18 @@
+site_name: K65
+site_author: KK/Altair
+site_description: "K65 Documentation"
+
+repo_url: https://github.com/Krzysiek-K/k65
+
+theme:
+    name: readthedocs
+
+nav:
+    - Home: index.md
+    - Syntax: syntax.md
+    - Instructions: instructions.md
+    - Evaluator: evaluator.md
+    - Examples: examples.md
+    - Projects: projects.md
+    - Known Bugs: known-bugs.md
+    - To Do: todo.md
