@@ -8,7 +8,6 @@ using namespace std;
 namespace base
 {
 
-jhgsdfkjhkjsfdhg
 
 
 void ParseWhitespace(const char *&s)
