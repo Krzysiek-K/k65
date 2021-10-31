@@ -194,6 +194,7 @@ private:
 	void opbranch_repeat(const string &cmd,const string &lab,AsmSection::Location loc);
 	void oplabel(const string &lab);
 	string genlabel();
+	string flag2jump(const string &flag,bool flag_state);
 	void opend();
 	void op_delayed_repeat(const string &cmd);
 	void check_loop_jumps();

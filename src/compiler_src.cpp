@@ -724,6 +724,16 @@ string Compiler::genlabel()
 	return format("__label_%d",label_id_gen++);
 }
 
+string Compiler::flag2jump(const string &flag,bool flag_state)
+{
+	if( flag=="c" || flag=="C" ) return flag_state ? "BCC" : "BCS";
+	if( flag=="o" || flag=="O" ) return flag_state ? "BVC" : "BVS";
+	if( flag=="z" || flag=="Z" ) return flag_state ? "BEQ" : "BNE";	// TBD: this can't really happen right now
+	if( flag=="n" || flag=="N" ) return flag_state ? "BPL" : "BMI";	// TBD: this can't really happen right now
+	Error(format("[internal] Unknown flag '%s'",flag.c_str()).c_str());
+	return "";
+}
+
 void Compiler::opend()
 {
 	if(comms.size()<=0) return;

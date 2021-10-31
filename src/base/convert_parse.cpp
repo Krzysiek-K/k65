@@ -8,6 +8,9 @@ using namespace std;
 namespace base
 {
 
+jhgsdfkjhkjsfdhg
+
+
 void ParseWhitespace(const char *&s)
 {
 	while(*s==' ' || *s=='\t' || *s=='\n' || *s=='\r')
