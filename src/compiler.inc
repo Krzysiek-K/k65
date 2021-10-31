@@ -295,14 +295,8 @@ BranchOp -> !=				% $0="BNE";
 BranchOp -> >=0				% $0="BPL";
 BranchOp -> >>=				% $0="BVC";
 BranchOp -> <<=				% $0="BVS";
-BranchOp -> `c+?			% $0="BCS";
-BranchOp -> `c-?			% $0="BCC";
-BranchOp -> `z+?			% $0="BEQ";
-BranchOp -> `n+?			% $0="BMI";
-BranchOp -> `z-?			% $0="BNE";
-BranchOp -> `n-?			% $0="BPL";
-BranchOp -> `v-?			% $0="BVC";
-BranchOp -> `v+?			% $0="BVS";
+BranchOp -> Flag - ?		% $0=flag2jump($1,false);
+BranchOp -> Flag + ?		% $0=flag2jump($1,false);
 
 
 //BRK	....	interrupt									brk
