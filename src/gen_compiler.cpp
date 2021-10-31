@@ -1533,6 +1533,8 @@ Compiler::symb_t Compiler::RunParser()
 			case  219: { nr=   1; nst=  55;  S0="BPL";  } break;
 			case  220: { nr=   1; nst=  55;  S0="BVC";  } break;
 			case  221: { nr=   1; nst=  55;  S0="BVS";  } break;
+			case  222: { nr=   3; nst=  55;  S0=flag2jump(S(1),false);  } break;
+			case  223: { nr=   3; nst=  55;  S0=flag2jump(S(1),false);  } break;
 			case  224: { nr=   1; nst=   9;  S0=S(1);  } break;
 			case  225: { nr=   3; nst=   9;  ST S0=doeval(S(2),true);  } break;
 			case  226: { nr=   3; nst=  16;  ST S0=doeval(S(2),true);  } break;
