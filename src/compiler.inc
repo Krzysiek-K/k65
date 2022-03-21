@@ -164,6 +164,8 @@ Instr -> A ??								% ST opsimp("PLA"); opend();
 Instr -> A !!								% ST opsimp("PHA"); opend();
 //Instr -> Flag ??							% ST opsimp("PLP"); opend();
 //Instr -> Flag !!							% ST opsimp("PHP"); opend();
+Instr -> `flags??							% ST opsimp("PLP"); opend();
+Instr -> `flags!!							% ST opsimp("PHP"); opend();
 Instr -> `z??								% ST opsimp("PLP"); opend();
 Instr -> `z!!								% ST opsimp("PHP"); opend();
 Instr -> `c??								% ST opsimp("PLP"); opend();
