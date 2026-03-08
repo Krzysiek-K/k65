@@ -33,6 +33,90 @@ clean:
   rm main.gmap main.lst main.sym
 ```
 
+## Atari 2600 / VCS
+
+### Frame sync helpers (PAL)
+
+```c
+var zeropage = 0
+
+inline init2600 {
+  i+ d-
+  s=x=0xFF
+  a=0 { zeropage,x=a x-- } !=
+}
+
+inline wait_timer { { a=INTIM } != }
+inline wsync { WSYNC=a }
+
+inline sync_overscan { wait_timer wsync VBLANK=a=2 TIM64T=a=40 }
+inline sync_vsync {
+  wait_timer wsync
+  VSYNC=a=2
+  wsync wsync
+  a=0 wsync VSYNC=a
+  TIM64T=a=54
+}
+inline sync_visible { wait_timer wsync VBLANK=a=0 T1024T=a=18 }
+```
+
+### Reusable horizontal positioning inline
+
+```c
+inline set_player_x {
+  // Input: A = X position, X = player index (0..1)
+  nocross {
+    wsync
+    { a-15 } >=0
+    a<< a<< a<< a<<
+    a^0x70
+    hp0,x=a
+    *5
+    rp0,x=a
+  }
+}
+
+func draw_two_players {
+  x=0 a=42 set_player_x
+  x=1 a=58 set_player_x
+  wsync
+  hmove=a
+}
+```
+
+### Simple scene sequencer
+
+```c
+var seq_step = 0xF0
+var seq_break = 0xF1
+
+inline break_on_seq {
+  a=seq_step
+  a?seq_break >= { return }
+}
+
+func scene_a {
+  seq_break=a=8
+  {
+    sync_overscan
+    sync_vsync
+    sync_visible
+    seq_step++
+    break_on_seq
+  } always
+}
+
+main {
+  init2600
+  seq_step=a=0
+  scene_a
+}
+```
+
+---
+
+_Inspiration: `sv2019` Atari VCS project patterns (`_defs.k65`, `util.k65`, `main.k65`), rewritten for documentation examples._
+
 ## Atari 800 XL
 
 ### Rainbow
