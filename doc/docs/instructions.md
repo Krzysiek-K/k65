@@ -20,14 +20,14 @@
 \*   16-bit address words are [little endian](https://en.wikipedia.org/wiki/Endianness), lo(w)-byte first, followed by the hi(gh)-byte. An assembler will use a human readable, big-endian notation as in `$HHLL`.
 
 \*\*  The available 16-bit address space is conceived as consisting of pages of 256 bytes each, with
-address hi-bytes represententing the page index. An increment with carry may affect the hi-byte
+address hi-bytes representing the page index. An increment with carry may affect the hi-byte
 and may thus result in a crossing of page boundaries, adding an extra cycle to the execution.
 Increments without carry do not affect the hi-byte of an address and no page transitions do occur.
 Generally, increments of 16-bit addresses include a carry, increments of zeropage addresses don't.
 Notably this is not related in any way to the state of the carry bit of the accumulator.
 
 \*\*\* Branch offsets are signed 8-bit values, `-128 ... +127`, negative offsets in two's complement.
-Page transitions may occur and add an extra cycle to the exucution.
+Page transitions may occur and add an extra cycle to execution.
 
 ## Registers
 
@@ -47,7 +47,7 @@ N ....  Negative
 V ....  Overflow
 - ....  ignored
 B ....  Break
-D ....  Decimal (use BCD for arithmetics)
+D ....  Decimal (use BCD for arithmetic)
 I ....  Interrupt (IRQ disable)
 Z ....  Zero
 C ....  Carry
@@ -59,7 +59,7 @@ C ....  Carry
 
 ## Bytes, Words, Addressing
 
-8 bit bytes, 16 bit words in lobyte-hibyte representation (**Little-Endian**).
+8 bit bytes, 16 bit words in low-byte/high-byte representation (**Little-Endian**).
 16 bit address range, operands follow instruction codes.
 
 Signed values are two's complement, sign in bit 7 (most significant bit).
@@ -73,7 +73,7 @@ Signed values are two's complement, sign in bit 7 (most significant bit).
 **K65** compiler supports following 6502 instructions. **TBD** value means that instruction support is planned, but currently not implemented.
 
 [`ADC`](#adc-add-with-carry) [`AND`](#and-and-with-accumulator) [`ASL`](#asl-arithmetic-shift-left)
-[`BCC`](#bcc-branch-on-carry-clear) [`BCS`](#bcs-branch-on-carry-clear) [`BEQ`](#beq-branch-on-equal-zero-set)
+[`BCC`](#bcc-branch-on-carry-clear) [`BCS`](#bcs-branch-on-carry-set) [`BEQ`](#beq-branch-on-equal-zero-set)
 [`BIT`](#bit-bit-test) [`BMI`](#bmi-branch-on-minus-negative-set) [`BNE`](#bne-branch-on-not-equal-zero-clear)
 [`BPL`](#bpl-branch-on-plus-negative-clear) [`BRK`](#brk-interrupt) [`BVC`](#bvc-branch-on-overflow-clear)
 [`BVS`](#bvs-branch-on-overflow-set) [`CLC`](#clc-clear-carry) [`CLD`](#cld-clear-decimal)
@@ -106,9 +106,9 @@ ADC  Add Memory to Accumulator with Carry
      A + M + C -> A, C                N Z C I D V
                                       + + + - - +
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
-     immidiate     ADC #oper     69    2     2
+     immediate     ADC #oper     69    2     2
      zeropage      ADC oper      65    2     3
      zeropage,X    ADC oper,X    75    2     4
      absolute      ADC oper      6D    3     4
@@ -132,9 +132,9 @@ AND  AND Memory with Accumulator
      A AND M -> A                     N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
-     immidiate     AND #oper     29    2     2
+     immediate     AND #oper     29    2     2
      zeropage      AND oper      25    2     3
      zeropage,X    AND oper,X    35    2     4
      absolute      AND oper      2D    3     4
@@ -158,7 +158,7 @@ ASL  Shift Left One Bit (Memory or Accumulator)
      C <- [76543210] <- 0             N Z C I D V
                                       + + + - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      accumulator   ASL A         0A    1     2
      zeropage      ASL oper      06    2     5
@@ -184,7 +184,7 @@ BCC  Branch on Carry Clear
      branch on C = 0                  N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      relative      BCC oper      90    2     2**
 ```
@@ -206,7 +206,7 @@ BCS  Branch on Carry Set
      branch on C = 1                  N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      relative      BCS oper      B0    2     2**
 ```
@@ -228,7 +228,7 @@ BEQ  Branch on Result Zero
      branch on Z = 1                  N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      relative      BEQ oper      F0    2     2**
 ```
@@ -250,7 +250,7 @@ BIT  Test Bits in Memory with Accumulator
      A AND M, M7 -> N, M6 -> V        N Z C I D V
                                      M7 + - - - M6
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      zeropage      BIT oper      24    2     3
      absolute      BIT oper      2C    3     4
@@ -273,7 +273,7 @@ BMI  Branch on Result Minus
      branch on N = 1                  N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      relative      BMI oper      30    2     2**
 ```
@@ -295,7 +295,7 @@ BNE  Branch on Result not Zero
      branch on Z = 0                  N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      relative      BNE oper      D0    2     2**
 ```
@@ -317,7 +317,7 @@ BPL  Branch on Result Plus
      branch on N = 0                  N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      relative      BPL oper      10    2     2**
 ```
@@ -334,7 +334,7 @@ BRK  Force Break
      interrupt,                       N Z C I D V
      push PC+2, push SR               - - - 1 - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       BRK           00    1     7
 ```
@@ -356,7 +356,7 @@ BVC  Branch on Overflow Clear
      branch on V = 0                  N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      relative      BVC oper      50    2     2**
 ```
@@ -378,9 +378,9 @@ BVS  Branch on Overflow Set
      branch on V = 1                  N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
-     relative      BVC oper      70    2     2**
+     relative      BVS oper      70    2     2**
 ```
 
 ---
@@ -397,7 +397,7 @@ CLC  Clear Carry Flag
      0 -> C                           N Z C I D V
                                       - - 0 - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       CLC           18    1     2
 ```
@@ -416,7 +416,7 @@ CLD  Clear Decimal Mode
      0 -> D                           N Z C I D V
                                       - - - - 0 -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       CLD           D8    1     2
 ```
@@ -435,7 +435,7 @@ CLI  Clear Interrupt Disable Bit
      0 -> I                           N Z C I D V
                                       - - - 0 - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       CLI           58    1     2
 ```
@@ -454,7 +454,7 @@ CLV  Clear Overflow Flag
      0 -> V                           N Z C I D V
                                       - - - - - 0
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       CLV           B8    1     2
 ```
@@ -473,9 +473,9 @@ CMP  Compare Memory with Accumulator
      A - M                            N Z C I D V
                                       + + + - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
-     immidiate     CMP #oper     C9    2     2
+     immediate     CMP #oper     C9    2     2
      zeropage      CMP oper      C5    2     3
      zeropage,X    CMP oper,X    D5    2     4
      absolute      CMP oper      CD    3     4
@@ -499,9 +499,9 @@ CPX  Compare Memory and Index X
      X - M                            N Z C I D V
                                       + + + - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
-     immidiate     CPX #oper     E0    2     2
+     immediate     CPX #oper     E0    2     2
      zeropage      CPX oper      E4    2     3
      absolute      CPX oper      EC    3     4
 ```
@@ -520,9 +520,9 @@ CPY  Compare Memory and Index Y
      Y - M                            N Z C I D V
                                       + + + - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
-     immidiate     CPY #oper     C0    2     2
+     immediate     CPY #oper     C0    2     2
      zeropage      CPY oper      C4    2     3
      absolute      CPY oper      CC    3     4
 ```
@@ -541,7 +541,7 @@ DEC  Decrement Memory by One
      M - 1 -> M                       N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      zeropage      DEC oper      C6    2     5
      zeropage,X    DEC oper,X    D6    2     6
@@ -563,7 +563,7 @@ DEX  Decrement Index X by One
      X - 1 -> X                       N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       DEC           CA    1     2
 ```
@@ -582,7 +582,7 @@ DEY  Decrement Index Y by One
      Y - 1 -> Y                       N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       DEC           88    1     2
 ```
@@ -601,9 +601,9 @@ EOR  Exclusive-OR Memory with Accumulator
      A EOR M -> A                     N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
-     immidiate     EOR #oper     49    2     2
+     immediate     EOR #oper     49    2     2
      zeropage      EOR oper      45    2     3
      zeropage,X    EOR oper,X    55    2     4
      absolute      EOR oper      4D    3     4
@@ -627,7 +627,7 @@ INC  Increment Memory by One
      M + 1 -> M                       N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      zeropage      INC oper      E6    2     5
      zeropage,X    INC oper,X    F6    2     6
@@ -649,7 +649,7 @@ INX  Increment Index X by One
      X + 1 -> X                       N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       INX           E8    1     2
 ```
@@ -668,7 +668,7 @@ INY  Increment Index Y by One
      Y + 1 -> Y                       N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       INY           C8    1     2
 ```
@@ -687,7 +687,7 @@ JMP  Jump to New Location
      (PC+1) -> PCL                    N Z C I D V
      (PC+2) -> PCH                    - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      absolute      JMP oper      4C    3     3
      indirect      JMP (oper)    6C    3     5
@@ -708,7 +708,7 @@ JSR  Jump to New Location Saving Return Address
      (PC+1) -> PCL                    - - - - - -
      (PC+2) -> PCH
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      absolute      JSR oper      20    3     6
 ```
@@ -727,9 +727,9 @@ LDA  Load Accumulator with Memory
      M -> A                           N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
-     immidiate     LDA #oper     A9    2     2
+     immediate     LDA #oper     A9    2     2
      zeropage      LDA oper      A5    2     3
      zeropage,X    LDA oper,X    B5    2     4
      absolute      LDA oper      AD    3     4
@@ -753,9 +753,9 @@ LDX  Load Index X with Memory
      M -> X                           N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
-     immidiate     LDX #oper     A2    2     2
+     immediate     LDX #oper     A2    2     2
      zeropage      LDX oper      A6    2     3
      zeropage,Y    LDX oper,Y    B6    2     4
      absolute      LDX oper      AE    3     4
@@ -776,9 +776,9 @@ LDY  Load Index Y with Memory
      M -> Y                           N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
-     immidiate     LDY #oper     A0    2     2
+     immediate     LDY #oper     A0    2     2
      zeropage      LDY oper      A4    2     3
      zeropage,X    LDY oper,X    B4    2     4
      absolute      LDY oper      AC    3     4
@@ -799,7 +799,7 @@ LSR  Shift One Bit Right (Memory or Accumulator)
      0 -> [76543210] -> C             N Z C I D V
                                       0 + + - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      accumulator   LSR A         4A    1     2
      zeropage      LSR oper      46    2     5
@@ -821,7 +821,7 @@ NOP  No Operation
      ---                              N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       NOP           EA    1     2
 ```
@@ -840,9 +840,9 @@ ORA  OR Memory with Accumulator
      A OR M -> A                      N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
-     immidiate     ORA #oper     09    2     2
+     immediate     ORA #oper     09    2     2
      zeropage      ORA oper      05    2     3
      zeropage,X    ORA oper,X    15    2     4
      absolute      ORA oper      0D    3     4
@@ -866,7 +866,7 @@ PHA  Push Accumulator on Stack
      push A                           N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       PHA           48    1     3
 ```
@@ -885,7 +885,7 @@ PHP  Push Processor Status on Stack
      push SR                          N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       PHP           08    1     3
 ```
@@ -904,7 +904,7 @@ PLA  Pull Accumulator from Stack
      pull A                           N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       PLA           68    1     4
 ```
@@ -923,7 +923,7 @@ PLP  Pull Processor Status from Stack
      pull SR                          N Z C I D V
                                       from stack
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       PLP           28    1     4
 ```
@@ -942,7 +942,7 @@ ROL  Rotate One Bit Left (Memory or Accumulator)
      C <- [76543210] <- C             N Z C I D V
                                       + + + - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      accumulator   ROL A         2A    1     2
      zeropage      ROL oper      26    2     5
@@ -965,7 +965,7 @@ ROR  Rotate One Bit Right (Memory or Accumulator)
      C -> [76543210] -> C             N Z C I D V
                                       + + + - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      accumulator   ROR A         6A    1     2
      zeropage      ROR oper      66    2     5
@@ -988,7 +988,7 @@ RTI  Return from Interrupt
      pull SR, pull PC                 N Z C I D V
                                       from stack
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       RTI           40    1     6
 ```
@@ -1007,7 +1007,7 @@ RTS  Return from Subroutine
      pull PC, PC+1 -> PC              N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       RTS           60    1     6
 ```
@@ -1026,9 +1026,9 @@ SBC  Subtract Memory from Accumulator with Borrow
      A - M - C -> A                   N Z C I D V
                                       + + + - - +
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
-     immidiate     SBC #oper     E9    2     2
+     immediate     SBC #oper     E9    2     2
      zeropage      SBC oper      E5    2     3
      zeropage,X    SBC oper,X    F5    2     4
      absolute      SBC oper      ED    3     4
@@ -1052,7 +1052,7 @@ SEC  Set Carry Flag
      1 -> C                           N Z C I D V
                                       - - 1 - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       SEC           38    1     2
 ```
@@ -1071,7 +1071,7 @@ SED  Set Decimal Flag
      1 -> D                           N Z C I D V
                                       - - - - 1 -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       SED           F8    1     2
 ```
@@ -1090,7 +1090,7 @@ SEI  Set Interrupt Disable Status
      1 -> I                           N Z C I D V
                                       - - - 1 - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       SEI           78    1     2
 ```
@@ -1109,7 +1109,7 @@ STA  Store Accumulator in Memory
      A -> M                           N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      zeropage      STA oper      85    2     3
      zeropage,X    STA oper,X    95    2     4
@@ -1134,7 +1134,7 @@ STX  Store Index X in Memory
      X -> M                           N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      zeropage      STX oper      86    2     3
      zeropage,Y    STX oper,Y    96    2     4
@@ -1155,7 +1155,7 @@ STY  Sore Index Y in Memory
      Y -> M                           N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      zeropage      STY oper      84    2     3
      zeropage,X    STY oper,X    94    2     4
@@ -1176,7 +1176,7 @@ TAX  Transfer Accumulator to Index X
      A -> X                           N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       TAX           AA    1     2
 ```
@@ -1195,7 +1195,7 @@ TAY  Transfer Accumulator to Index Y
      A -> Y                           N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       TAY           A8    1     2
 ```
@@ -1214,7 +1214,7 @@ TSX  Transfer Stack Pointer to Index X
      SP -> X                          N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       TSX           BA    1     2
 ```
@@ -1233,7 +1233,7 @@ TXA  Transfer Index X to Accumulator
      X -> A                           N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       TXA           8A    1     2
 ```
@@ -1252,7 +1252,7 @@ TXS  Transfer Index X to Stack Register
      X -> SP                          N Z C I D V
                                       - - - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       TXS           9A    1     2
 ```
@@ -1271,7 +1271,7 @@ TYA  Transfer Index Y to Accumulator
      Y -> A                           N Z C I D V
                                       + + - - - -
 
-     addressing    assembler    opc  bytes  cyles
+     addressing    assembler    opc  bytes  cycles
      --------------------------------------------
      implied       TYA           98    1     2
 ```

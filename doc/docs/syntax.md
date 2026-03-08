@@ -37,9 +37,19 @@ Examples:
 ]                       // end of evaluator expression
 ```
 
+## Numeric literals
+
+K65 accepts decimal, hexadecimal and binary numeric literals.
+
+```c
+var dec = 42
+var hex = 0x2A
+var bin = 0b00101010
+```
+
 ## Labels
 
-A label can be placed at the beginning of a statement. During assembly, the label is assigned the current value of the active location counter and serves as an instruction operand. There are two types of lables: global and local. Examples below.
+A label can be placed at the beginning of a statement. During assembly, the label is assigned the current value of the active location counter and serves as an instruction operand. There are two types of labels: global and local. Examples are shown below.
 
 ### Global
 
@@ -120,29 +130,29 @@ main {
 
 ## Data block definition
 
-Data blocks are defined using data keyword. Defining data block at the same time defines a label to its first element, so the block is accessibl using simple indexing, like `MyData,x`. Datablocks can have optional **alignment** or **no-page-crossing** restrictions enabled.
+Data blocks are defined using the `data` keyword. Defining a data block also defines a label for its first element, so the block is accessible using simple indexing, like `MyData,x`. Data blocks can have optional **alignment** or **no-page-crossing** restrictions enabled.
 
 Examples:
 
 ```c
 data MyData1 {
   align 16              // align to 16 byte boundary
-  1 2 3 4 5 6 7 8       // data bytes folow
+  1 2 3 4 5 6 7 8       // data bytes follow
 }
 
 data MyData2 {
   align 256 + 8         // align to 8 bytes after page boundary (lower address byte will be 0x08)
-  1 2 3 4 5 6 7 8       // data bytes folow
+  1 2 3 4 5 6 7 8       // data bytes follow
 }
 
 data MyData3 {
   nocross               // the data will fit completely inside single page, but can be at any offset within it
-  1 2 3 4 5 6 7 8       // data bytes folow
+  1 2 3 4 5 6 7 8       // data bytes follow
 }
 
 data MyData4 {
   address 0x5000        // fixed memory address
-  1 2 3 4 5 6 7 8       // data bytes folow
+  1 2 3 4 5 6 7 8       // data bytes follow
 }
 
 data MyData5 {
@@ -190,26 +200,59 @@ data SineY {
 data InfoScript {
   charset " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!'-?:/()acelnosxz&"
 
-  "POlaCZONY Z WYWIADEM" 0xFE
-  "Z TYM WIELKIM" 0xFE
-  "ARTYSTa." 0xFE 0xF0
+  "CONNECTED TO THE INTERVIEW" 0xFE
+  "WITH THIS GREAT" 0xFE
+  "ARTIST." 0xFE 0xF0
   0xFE
 }
 ```
 
+## Image declarations for evaluator
+
+You can declare an image as an evaluator source and then read its pixels in evaluator expressions.
+
+```c
+image World = "files/world.bmp"
+
+data WorldMask {
+  for i=0..99 eval [
+    x=i%10,
+    y=floor(i/10),
+    (World[x,y] & 0x80) ? 1 : 0
+  ]
+}
+```
+
+This is different from `image ...` used inside `data` blocks. Here, the image is exposed to the evaluator as a 2D source (`ImageName[x,y]`).
+
+## `nocross` for code blocks
+
+`nocross` can also be used with a code block to force the whole block to stay inside one memory page. This is useful for timing-critical loops and self-modifying code patterns.
+
+```c
+nocross {
+  y=4 {
+    lda_table,y
+    y--
+  } >=0
+}
+```
+
+If the block cannot fit in one page, compilation fails.
+
 ## Compile-time Evaluator
 
-The **K65** compiler has embedded evaluator that always executes at compile-time. The evaluator can perform arbitrary math operations which results are inlined in the final code as immediates. The evaluator can also set and use global compiler constants.
+The **K65** compiler has an embedded evaluator that always executes at compile time. The evaluator can perform arbitrary math operations whose results are inlined in the final code as immediates. The evaluator can also set and use global compiler constants.
 
-The evaluator is explained in detail on [K65 Evaluator](../evaluator) page.
+The evaluator is explained in detail on [K65 Evaluator](evaluator.md) page.
 
 ## Code sections
 
-Executable code in K65 compiler is specified in sections. There currently supported types of code sections are:
+Executable code in the K65 compiler is specified in sections. The currently supported types of code sections are:
 
 ### `main`
 
-This function being program entry point.
+This function is the program entry point.
 
 ```c
 main {
@@ -260,7 +303,7 @@ func test {
 
 ## `else`
 
-In fact this creates (in branch code) jump to .label outside `else` bracket.
+In practice, this creates (in branch code) a jump to a generated label outside the `else` block.
 
 Example:
 
@@ -278,9 +321,9 @@ inline check_if_key_or_doors {
 
 ## Far calls
 
-Functions can also be called with far prefix to mark that the target function is in another bank, than the current one. The bankswitching mechanism used is defined by the linker. Inlines do not use far prefix, because the code is simply inlined.
+Functions can also be called with the `far` prefix to mark that the target function is in another bank than the current one. The bank-switching mechanism used is defined by the linker. Inlines do not use the `far` prefix, because the code is simply inlined.
 
-**NOTE**: if far call is used within inline make sure to use such inline with care - inlining such inline in another bank will copy the inline code directly, which will usually result in improper bankswitching and program crash.
+**NOTE**: If a far call is used within an inline, use such inline with care. Inlining it in another bank will copy the inline code directly, which usually results in improper bank switching and a program crash.
 
 ```c
 func test2_in_different_bank {
@@ -290,4 +333,4 @@ func test2_in_different_bank {
 
 ---
 
-*This page is still under construction - much of the infrmation is still to be filled*
+*This page is still under construction - much of the information is still to be filled.*

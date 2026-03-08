@@ -1,6 +1,6 @@
 #
 
-Evaluator in **K65** is compile-time executed expression language very similar to **C/C++** expressions.
+Evaluator in **K65** is a compile-time expression language very similar to **C/C++** expressions.
 
 ## Introduction
 
@@ -12,13 +12,13 @@ data NumberFour {
 }
 ```
 
-The evaluator can be also invoked freely outside any section body, e.g. to set variables:
+The evaluator can also be invoked freely outside any section body, e.g. to set variables:
 
 ```c
 [ FOUR = 4 ]
 ```
 
-which can be later used freely as compiler constants and within further evaluator expressions:
+which can later be used as compiler constants and within further evaluator expressions:
 
 ```c
 data FourFiveSix {
@@ -30,7 +30,7 @@ data FourFiveSix {
 
 ## Operators
 
-Available operators and their precedence levels are similar to operators in **C** and **C++**, operators are sorted by precedence from highest to lowest:
+Available operators and their precedence levels are similar to **C/C++**. Operators are sorted by precedence from highest to lowest:
 
 ### Precedence 2
 
@@ -38,7 +38,7 @@ Associativity: **left-to-right**
 
 Operator|Description
 :---:|:---
-`++`<br/>`--`<br/>`()`<br/>`[]`<br/>`.` |suffix incremen<br/>suffix decrement<br/>function call<br/>array subscripting<br/>single argument function call
+`++`<br/>`--`<br/>`()`<br/>`[]`<br/>`.` |suffix increment<br/>suffix decrement<br/>function call<br/>array subscripting<br/>single argument function call
 
 ---
 
@@ -106,7 +106,7 @@ Operator|Description
 
 Associativity: **left-to-right**
 
-Operator|Descriptiont
+Operator|Description
 :---:|:---
 `&`|bitwise AND
 
@@ -158,7 +158,7 @@ Associativity: **right-to-left**
 
 Operator|Description
 :---:|:---
-`?:`|lternary conditional
+`?:`|ternary conditional
 
 ---
 
@@ -168,7 +168,7 @@ Associativity: **right-to-left**
 
 Operator|Description
 :---:|:---
-`=`<br/>`+=`<br/>`-=`<br/>`*=`<br/>`/=`<br/>`%=`<br/>`<<=`<br/>`>>=`<br/>`&=`<br/>`^=`<br/>`|=`<br/>|direct assignment<br/>assignment by sum<br/>assignment by difference<br/>assignment by product<br/>assignment by quotient<br/>assignment by remainder<br/>assignment by bitwise left shift<br/>assignment by bitwise right shift<br/>assignment by bitwise AND<br/>assignment by bitwise XOR<br/>assignment by bitwise OR<br/>
+`=`<br/>`+=`<br/>`-=`<br/>`*=`<br/>`/=`<br/>`%=`<br/>`<<=`<br/>`>>=`<br/>`&=`<br/>`^=`<br/>`|=`|direct assignment<br/>assignment by sum<br/>assignment by difference<br/>assignment by product<br/>assignment by quotient<br/>assignment by remainder<br/>assignment by bitwise left shift<br/>assignment by bitwise right shift<br/>assignment by bitwise AND<br/>assignment by bitwise XOR<br/>assignment by bitwise OR
 
 ---
 
@@ -186,7 +186,7 @@ Operator|Description
 
 ### `acos( x )`
 
-Arcus cosinus
+Arccosine
 
 ---
 
@@ -198,7 +198,7 @@ Add byte b to section sec
 
 ### `asin( x )`
 
-Arcus sinus
+Arcsine
 
 ---
 
@@ -228,13 +228,13 @@ Return palette index for nearest color specified in format 0xRRGGBB
 
 ### `cos( x )`
 
-Cosinus
+Cosine
 
 ---
 
 ### `error( err )`
 
-Print error message err ane terminate compilation
+Print error message err and terminate compilation
 
 ---
 
@@ -300,7 +300,7 @@ Round to nearest integer
 
 ### `sin( x )`
 
-Sinus
+Sine
 
 ---
 
@@ -313,3 +313,40 @@ Current size of section sec
 ### `sqrt( x )`
 
 Square root
+
+---
+
+## Section helpers in method form
+
+In addition to function form, evaluator supports method-like calls on section symbols:
+
+- `SectionName.size()` - equivalent to `size(SectionName)`
+- `SectionName.addbyte(v)` - equivalent to `addbyte(SectionName, v)`
+
+Example:
+
+```c
+data Generated {
+  for x=0..15 eval [ Generated.addbyte(x*2) ]
+}
+
+[
+  GENERATED_LEN = Generated.size()
+]
+```
+
+## Image sampling in evaluator
+
+When an image is declared with top-level `image Name = "file.bmp"`, evaluator can read its pixels with 2D indexing:
+
+```c
+image Pic = "gfx/pic.bmp"
+
+data Mask {
+  for i=0..63 eval [
+    x=i%8,
+    y=floor(i/8),
+    (Pic[x,y] & 0x80) ? 1 : 0
+  ]
+}
+```

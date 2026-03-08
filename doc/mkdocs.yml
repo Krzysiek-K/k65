@@ -9,10 +9,20 @@ theme:
 
 nav:
     - Home: index.md
+    - Downloads: downloads.md
+    - Changelog: changelog.md
     - Syntax: syntax.md
     - Instructions: instructions.md
     - Evaluator: evaluator.md
+    - Tutorials:
+        - Overview: tutorials.md
+        - Tutorial 1: tutorial-1.md
+        - Tutorial 2: tutorial-2.md
+        - Tutorial 3: tutorial-3.md
     - Examples: examples.md
+    - Atari 800/65 XE: platform-atari-8bit.md
+    - Commodore 64: platform-c64.md
+    - Alternate VCS Definitions: alternate-vcs-definitions.md
     - Projects: projects.md
     - Known Bugs: known-bugs.md
     - To Do: todo.md
